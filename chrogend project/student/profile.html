@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Account Profile — MathVibe</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/data.js"></script>
+  <script src="../js/store.js"></script>
+  <script src="../js/app.js"></script>
+</head>
+<body class="dark-mode">
+
+  <div id="app-header"></div>
+
+  <div class="dashboard-wrapper">
+    <div id="app-sidebar"></div>
+
+    <main class="main-content">
+      <div class="page-header" style="margin-bottom: 2rem;">
+        <div>
+          <h1 style="font-size: 2.2rem;">Student Profile & Account Settings</h1>
+          <p style="color: var(--text-secondary);">Manage your personal learning profile and account credentials.</p>
+        </div>
+      </div>
+
+      <div class="card" style="padding: 2.5rem; max-width: 700px;">
+        <form id="profile-form">
+          <div style="margin-bottom: 1.2rem;">
+            <label style="display: block; font-weight: 600; margin-bottom: 0.4rem;">Full Name</label>
+            <input type="text" id="prof-name" class="input-control" required style="width: 100%; padding: 0.8rem; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-primary); color: var(--text-primary);">
+          </div>
+
+          <div style="margin-bottom: 1.2rem;">
+            <label style="display: block; font-weight: 600; margin-bottom: 0.4rem;">Student ID / Registration Number</label>
+            <input type="text" id="prof-matric" class="input-control" required style="width: 100%; padding: 0.8rem; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-primary); color: var(--text-primary);">
+          </div>
+
+          <div style="margin-bottom: 1.2rem;">
+            <label style="display: block; font-weight: 600; margin-bottom: 0.4rem;">Email Address</label>
+            <input type="email" id="prof-email" class="input-control" required style="width: 100%; padding: 0.8rem; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-primary); color: var(--text-primary);">
+          </div>
+
+          <div style="margin-bottom: 2rem;">
+            <label style="display: block; font-weight: 600; margin-bottom: 0.4rem;">Department / Field</label>
+            <input type="text" id="prof-dept" class="input-control" value="Mathematics" style="width: 100%; padding: 0.8rem; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-primary); color: var(--text-primary);">
+          </div>
+
+          <button type="submit" class="btn btn-primary" style="padding: 0.8rem 2rem;">Save Changes</button>
+        </form>
+      </div>
+    </main>
+  </div>
+
+  <div id="app-footer"></div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const user = Store.getUser();
+      if (user) {
+        document.getElementById('prof-name').value = user.name || '';
+        document.getElementById('prof-matric').value = user.matricNumber || 'STU-2026-001';
+        document.getElementById('prof-email').value = user.email || '';
+        document.getElementById('prof-dept').value = user.department || 'Mathematics';
+      }
+
+      document.getElementById('profile-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const updated = {
+          ...Store.getUser(),
+          name: document.getElementById('prof-name').value,
+          matricNumber: document.getElementById('prof-matric').value,
+          email: document.getElementById('prof-email').value,
+          department: document.getElementById('prof-dept').value
+        };
+        Store.setUser(updated);
+        App.showToast('Profile updated successfully!', 'success');
+        setTimeout(() => location.reload(), 500);
+      });
+    });
+  </script>
+</body>
+</html>

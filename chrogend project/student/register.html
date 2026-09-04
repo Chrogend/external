@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Registration — MathVibe</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/data.js"></script>
+  <script src="../js/store.js"></script>
+  <script src="../js/app.js"></script>
+</head>
+<body class="dark-mode">
+
+  <div id="app-header"></div>
+
+  <main style="flex: 1; display: flex; align-items: center; justify-content: center; padding: 3rem 1rem;">
+    <div class="card" style="max-width: 460px; width: 100%; padding: 2.5rem;">
+      <div style="text-align: center; margin-bottom: 2rem;">
+        <span style="font-size: 2.5rem;">📝</span>
+        <h2 style="font-size: 1.8rem; margin-top: 0.5rem;">Create Account</h2>
+        <p style="color: var(--text-secondary); font-size: 0.9rem;">Join 20 University Mathematics Learning Modules</p>
+      </div>
+
+      <form id="reg-form">
+        <div style="margin-bottom: 1rem;">
+          <label style="display: block; font-weight: 600; margin-bottom: 0.3rem;">Full Name</label>
+          <input type="text" id="fullname" class="input-control" placeholder="e.g. Suleiman Christian Audu" required style="width: 100%; padding: 0.75rem; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-primary); color: var(--text-primary);">
+        </div>
+
+        <div style="margin-bottom: 1rem;">
+          <label style="display: block; font-weight: 600; margin-bottom: 0.3rem;">Matric / Student ID</label>
+          <input type="text" id="matric" class="input-control" placeholder="e.g. 2022/SC/MTH/0023" required style="width: 100%; padding: 0.75rem; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-primary); color: var(--text-primary);">
+        </div>
+
+        <div style="margin-bottom: 1rem;">
+          <label style="display: block; font-weight: 600; margin-bottom: 0.3rem;">Email Address</label>
+          <input type="email" id="email" class="input-control" placeholder="student@fulafia.edu.ng" required style="width: 100%; padding: 0.75rem; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-primary); color: var(--text-primary);">
+        </div>
+
+        <div style="margin-bottom: 1.5rem;">
+          <label style="display: block; font-weight: 600; margin-bottom: 0.3rem;">Password</label>
+          <input type="password" id="password" class="input-control" placeholder="••••••••" required style="width: 100%; padding: 0.75rem; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-primary); color: var(--text-primary);">
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%; padding: 0.8rem; font-size: 1rem;">Register Now</button>
+      </form>
+
+      <div style="text-align: center; margin-top: 1.5rem; font-size: 0.9rem; color: var(--text-secondary);">
+        Already have an account? <a href="login.html" style="color: var(--primary); font-weight: 600;">Sign In</a>
+      </div>
+    </div>
+  </main>
+
+  <div id="app-footer"></div>
+
+  <script>
+    document.getElementById('reg-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const user = {
+        id: Date.now(),
+        name: document.getElementById('fullname').value,
+        email: document.getElementById('email').value,
+        matricNumber: document.getElementById('matric').value,
+        role: 'student',
+        department: 'Mathematics',
+        institution: 'Federal University of Lafia',
+        level: '100l'
+      };
+      Store.setUser(user);
+      App.showToast('Account registered successfully!', 'success');
+      setTimeout(() => {
+        window.location.href = 'dashboard.html';
+      }, 500);
+    });
+  </script>
+</body>
+</html>

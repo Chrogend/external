@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Dashboard — MathVibe</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/data.js"></script>
+  <script src="../js/store.js"></script>
+  <script src="../js/app.js"></script>
+</head>
+<body class="dark-mode">
+
+  <div id="app-header"></div>
+
+  <div class="dashboard-wrapper">
+    <div id="app-sidebar"></div>
+
+    <main class="main-content">
+      <div class="page-header" style="margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+        <div>
+          <h1 style="font-size: 2.2rem;">Welcome back, <span id="user-display-name">Chrogend</span>! 👋</h1>
+          <p style="color: var(--text-secondary);">Ready to sharpen your mathematics skills today?</p>
+        </div>
+        <a href="lessons.html" class="btn btn-primary">Browse All 20 Lessons →</a>
+      </div>
+
+      <!-- Stats Grid -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; margin-bottom: 2.5rem;">
+        
+        <a href="lessons.html" class="card" style="padding: 1.5rem; border-left: 4px solid var(--primary); text-decoration: none; color: inherit;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <p style="color: var(--text-secondary); font-size: 0.85rem; text-transform: uppercase; font-weight: 700;">LESSONS READ</p>
+              <h2 style="font-size: 2rem; margin-top: 0.3rem;" id="stat-lessons">0 / 20</h2>
+            </div>
+            <span style="font-size: 2rem;">📚</span>
+          </div>
+        </a>
+
+        <a href="quizzes.html" class="card" style="padding: 1.5rem; border-left: 4px solid var(--info); text-decoration: none; color: inherit;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <p style="color: var(--text-secondary); font-size: 0.85rem; text-transform: uppercase; font-weight: 700;">QUIZZES DONE</p>
+              <h2 style="font-size: 2rem; margin-top: 0.3rem;" id="stat-quizzes">0</h2>
+            </div>
+            <span style="font-size: 2rem;">✍️</span>
+          </div>
+        </a>
+
+        <a href="progress.html" class="card" style="padding: 1.5rem; border-left: 4px solid var(--success); text-decoration: none; color: inherit;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <p style="color: var(--text-secondary); font-size: 0.85rem; text-transform: uppercase; font-weight: 700;">AVG SCORE</p>
+              <h2 style="font-size: 2rem; margin-top: 0.3rem;" id="stat-score">0%</h2>
+            </div>
+            <span style="font-size: 2rem;">🎯</span>
+          </div>
+        </a>
+
+        <a href="achievements.html" class="card" style="padding: 1.5rem; border-left: 4px solid var(--warning); text-decoration: none; color: inherit;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <p style="color: var(--text-secondary); font-size: 0.85rem; text-transform: uppercase; font-weight: 700;">STREAK</p>
+              <h2 style="font-size: 2rem; margin-top: 0.3rem;" id="stat-streak">1 Day</h2>
+            </div>
+            <span style="font-size: 2rem;">🔥</span>
+          </div>
+        </a>
+
+      </div>
+
+      <!-- Quick Navigation Hub -->
+      <div style="margin-bottom: 2.5rem;">
+        <h3 style="font-size: 1.3rem; margin-bottom: 1.2rem;">Quick Hub</h3>
+        <div class="wizard-grid" style="grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1.5rem;">
+          <a href="lessons.html" class="card" style="padding: 1.5rem; text-decoration: none;">
+            <h3>📚 20 Core Lessons</h3>
+            <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.4rem;">Study 10-page lecture notes with formulas.</p>
+          </a>
+          <a href="quizzes.html" class="card" style="padding: 1.5rem; text-decoration: none;">
+            <h3>📝 Checkpoint Quizzes</h3>
+            <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.4rem;">Take timed quizzes with solution steps.</p>
+          </a>
+          <a href="progress.html" class="card" style="padding: 1.5rem; text-decoration: none;">
+            <h3>📈 Progress Report</h3>
+            <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.4rem;">Track completion rates and quiz scores.</p>
+          </a>
+          <a href="achievements.html" class="card" style="padding: 1.5rem; text-decoration: none;">
+            <h3>🏆 Badges & Streaks</h3>
+            <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.4rem;">View study streak and unlocked awards.</p>
+          </a>
+        </div>
+      </div>
+
+      <!-- Main Content Grid -->
+      <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem;">
+        
+        <!-- Recent Quiz Attempts Table -->
+        <div class="card" style="padding: 1.8rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <h3 style="font-size: 1.2rem;">Recent Quiz Attempts</h3>
+            <a href="quizzes.html" style="font-size: 0.85rem; color: var(--primary); font-weight: 600;">View All Quizzes →</a>
+          </div>
+          
+          <div style="overflow-x: auto;">
+            <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem;">
+              <thead>
+                <tr style="border-bottom: 1px solid var(--border-color); text-align: left;">
+                  <th style="padding: 0.8rem; color: var(--text-secondary);">Topic</th>
+                  <th style="padding: 0.8rem; color: var(--text-secondary);">Score</th>
+                  <th style="padding: 0.8rem; color: var(--text-secondary);">Result</th>
+                  <th style="padding: 0.8rem; color: var(--text-secondary);">Date</th>
+                </tr>
+              </thead>
+              <tbody id="quiz-attempts-body">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Overall Curriculum Progress -->
+        <div class="card" style="padding: 1.8rem;">
+          <h3 style="font-size: 1.2rem; margin-bottom: 1rem;">Curriculum Completion</h3>
+          
+          <div style="text-align: center; margin: 2rem 0;">
+            <div style="font-size: 2.8rem; font-weight: 800; color: var(--primary);" id="completion-percentage">0%</div>
+            <p style="color: var(--text-secondary); font-size: 0.9rem;">20 Core Topics Covered</p>
+          </div>
+
+          <div style="background: var(--bg-primary); height: 10px; border-radius: 5px; overflow: hidden; margin-bottom: 1.5rem;">
+            <div id="completion-bar" style="background: var(--primary); height: 100%; width: 0%; transition: width 0.5s ease;"></div>
+          </div>
+
+          <a href="progress.html" class="btn btn-outline" style="width: 100%; text-align: center;">View Progress Details →</a>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <div id="app-footer"></div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const user = Store.getUser();
+      if (user) {
+        document.getElementById('user-display-name').innerText = user.name;
+      }
+
+      const progress = Store.getProgress();
+      const completedCount = Object.values(progress).filter(p => p.status === 'completed').length;
+      document.getElementById('stat-lessons').innerText = `${completedCount} / 20`;
+
+      const results = Store.getQuizResults();
+      document.getElementById('stat-quizzes').innerText = results.length;
+
+      if (results.length > 0) {
+        const totalScore = results.reduce((acc, r) => acc + r.percentage, 0);
+        const avg = Math.round(totalScore / results.length);
+        document.getElementById('stat-score').innerText = `${avg}%`;
+      } else {
+        document.getElementById('stat-score').innerText = `0%`;
+      }
+
+      const streak = Store.getStreakCount();
+      document.getElementById('stat-streak').innerText = `${streak} ${streak === 1 ? 'Day' : 'Days'}`;
+
+      const pct = Math.round((completedCount / 20) * 100);
+      document.getElementById('completion-percentage').innerText = `${pct}%`;
+      document.getElementById('completion-bar').style.width = `${pct}%`;
+
+      // Render attempts table
+      const tbody = document.getElementById('quiz-attempts-body');
+      if (results.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="4" style="padding: 2rem; text-align: center; color: var(--text-secondary);">
+              No quiz attempts recorded yet. <a href="quizzes.html" style="color: var(--primary); font-weight:600;">Take a Checkpoint Quiz</a> to start!
+            </td>
+          </tr>
+        `;
+      } else {
+        tbody.innerHTML = results.slice(0, 5).map(r => {
+          const topic = CURRICULUM_DATA.find(t => t.id == r.lessonId);
+          return `
+            <tr style="border-bottom: 1px solid var(--border-color);">
+              <td style="padding: 0.8rem; font-weight: 600;">${topic ? topic.title : 'Topic #' + r.lessonId}</td>
+              <td style="padding: 0.8rem;">${r.score} (${r.percentage}%)</td>
+              <td style="padding: 0.8rem;">
+                <span class="badge ${r.passed ? 'badge-success' : 'badge-danger'}">
+                  ${r.passed ? 'PASSED' : 'FAILED'}
+                </span>
+              </td>
+              <td style="padding: 0.8rem; color: var(--text-secondary);">${r.date}</td>
+            </tr>
+          `;
+        }).join('');
+      }
+    });
+  </script>
+</body>
+</html>

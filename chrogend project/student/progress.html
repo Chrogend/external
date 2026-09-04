@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Progress Analytics — MathVibe</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/data.js"></script>
+  <script src="../js/store.js"></script>
+  <script src="../js/app.js"></script>
+</head>
+<body class="dark-mode">
+
+  <div id="app-header"></div>
+
+  <div class="dashboard-wrapper">
+    <div id="app-sidebar"></div>
+
+    <main class="main-content">
+      <div class="page-header" style="margin-bottom: 2rem;">
+        <div>
+          <h1 style="font-size: 2.2rem;">Progress Analytics & Performance</h1>
+          <p style="color: var(--text-secondary);">Track your completion rates across all 20 Mathematics topics.</p>
+        </div>
+      </div>
+
+      <!-- Group progress grid -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; margin-bottom: 2.5rem;" id="group-progress-grid">
+        <!-- Generated dynamically -->
+      </div>
+
+      <!-- Full Topic Progress List Table -->
+      <div class="card" style="padding: 2rem;">
+        <h3 style="font-size: 1.3rem; margin-bottom: 1.5rem;">20 Core Mathematics Topics Status</h3>
+        
+        <div style="overflow-x: auto;">
+          <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem;">
+            <thead>
+              <tr style="border-bottom: 1px solid var(--border-color); text-align: left;">
+                <th style="padding: 0.8rem; color: var(--text-secondary);">Code</th>
+                <th style="padding: 0.8rem; color: var(--text-secondary);">Topic Title</th>
+                <th style="padding: 0.8rem; color: var(--text-secondary);">Reading Status</th>
+                <th style="padding: 0.8rem; color: var(--text-secondary);">Quiz Best Score</th>
+                <th style="padding: 0.8rem; color: var(--text-secondary);">Action</th>
+              </tr>
+            </thead>
+            <tbody id="topics-progress-table">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <div id="app-footer"></div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const progress = Store.getProgress();
+      const results = Store.getQuizResults();
+
+      const groups = [
+        { label: 'Topics 1–5', min: 1, max: 5 },
+        { label: 'Topics 6–10', min: 6, max: 10 },
+        { label: 'Topics 11–15', min: 11, max: 15 },
+        { label: 'Topics 16–20', min: 16, max: 20 }
+      ];
+
+      const groupGrid = document.getElementById('group-progress-grid');
+
+      groupGrid.innerHTML = groups.map(grp => {
+        const topicsInGroup = CURRICULUM_DATA.filter(t => t.id >= grp.min && t.id <= grp.max);
+        const completedInGroup = topicsInGroup.filter(t => progress[t.id]?.status === 'completed').length;
+        const pct = Math.round((completedInGroup / topicsInGroup.length) * 100);
+
+        return `
+          <div class="card" style="padding: 1.5rem; border-top: 4px solid var(--primary);">
+            <h4 style="font-size: 1.1rem; margin-bottom: 0.4rem;">${grp.label}</h4>
+            <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1rem;">${completedInGroup} of ${topicsInGroup.length} Completed</p>
+
+            <div style="background: var(--bg-primary); height: 8px; border-radius: 4px; overflow: hidden; margin-bottom: 0.6rem;">
+              <div style="background: var(--primary); height: 100%; width: ${pct}%;"></div>
+            </div>
+            <span style="font-weight: 700; font-size: 0.85rem; color: var(--primary);">${pct}% Mastery</span>
+          </div>
+        `;
+      }).join('');
+
+      // Populate full table
+      const tbody = document.getElementById('topics-progress-table');
+      tbody.innerHTML = CURRICULUM_DATA.map(t => {
+        const p = progress[t.id] || { status: 'not_started' };
+        const qResults = results.filter(r => r.lessonId == t.id);
+        const bestResult = qResults.length > 0 ? Math.max(...qResults.map(r => r.percentage)) : null;
+
+        return `
+          <tr style="border-bottom: 1px solid var(--border-color);">
+            <td style="padding: 0.8rem; font-weight: 700;">${t.code}</td>
+            <td style="padding: 0.8rem; font-weight: 600;">${t.title}</td>
+            <td style="padding: 0.8rem;">
+              <span class="badge ${p.status === 'completed' ? 'badge-success' : p.status === 'started' ? 'badge-warning' : 'badge-info'}">
+                ${p.status === 'completed' ? '✓ Completed' : p.status === 'started' ? 'In Progress' : 'Not Started'}
+              </span>
+            </td>
+            <td style="padding: 0.8rem; font-weight: 700;">
+              ${bestResult !== null ? `${bestResult}%` : '—'}
+            </td>
+            <td style="padding: 0.8rem;">
+              <a href="lessons.html?id=${t.id}" class="btn btn-outline" style="font-size: 0.8rem; padding: 0.3rem 0.8rem;">Open Sheet</a>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Core Mathematics Quizzes — MathVibe</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <!-- KaTeX CSS & JS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+
+  <script src="../js/data.js"></script>
+  <script src="../js/store.js"></script>
+  <script src="../js/app.js"></script>
+</head>
+<body class="dark-mode">
+
+  <div id="app-header"></div>
+
+  <div class="dashboard-wrapper">
+    <div id="app-sidebar"></div>
+
+    <main class="main-content" id="quiz-main-container">
+      <!-- Dynamically rendered -->
+    </main>
+  </div>
+
+  <div id="app-footer"></div>
+
+  <script>
+    let currentQuizState = {
+      topic: null,
+      timer: null,
+      timeLeft: 0,
+      userAnswers: {}
+    };
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const quizLessonId = urlParams.get('id');
+
+      if (quizLessonId && !isNaN(parseInt(quizLessonId))) {
+        startQuiz(parseInt(quizLessonId));
+      } else {
+        renderQuizList();
+      }
+    });
+
+    // --------------------------------------------------------
+    // MODE 1: QUIZ LIST CATALOGUE FOR 20 MATHEMATICS TOPICS
+    // --------------------------------------------------------
+    function renderQuizList() {
+      const main = document.getElementById('quiz-main-container');
+      const results = Store.getQuizResults();
+
+      main.innerHTML = `
+        <div class="page-header" style="margin-bottom: 2rem;">
+          <div>
+            <h1 style="font-size: 2.2rem;">Checkpoint Quizzes</h1>
+            <p style="color: var(--text-secondary);">Test your problem-solving mastery on the 20 mathematics topics.</p>
+          </div>
+        </div>
+
+        <div class="wizard-grid" style="grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem;">
+          ${CURRICULUM_DATA.map(t => {
+            const lastAttempt = results.find(r => r.lessonId == t.id);
+            return `
+              <div class="wizard-card" style="padding: 1.5rem; text-align: left; display: flex; flex-direction: column; justify-content: space-between;">
+                <div>
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem;">
+                    <span class="badge badge-info">${t.code}</span>
+                    ${lastAttempt 
+                      ? `<span class="badge ${lastAttempt.passed ? 'badge-success' : 'badge-danger'}">Best: ${lastAttempt.percentage}%</span>` 
+                      : `<span class="badge badge-warning">Unattempted</span>`
+                    }
+                  </div>
+                  <h3 style="font-size: 1.15rem; margin-bottom: 0.5rem;">${t.title} Checkpoint</h3>
+                  <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1.2rem;">
+                    ${t.quiz.questions.length} Questions • ${Math.round(t.quiz.timeLimit / 60)} Mins Time Limit
+                  </p>
+                </div>
+
+                <a href="quizzes.html?id=${t.id}" class="btn btn-primary" style="width: 100%; text-align: center;">
+                  ${lastAttempt ? 'Retake Quiz →' : 'Start Checkpoint Quiz →'}
+                </a>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      `;
+    }
+
+    // --------------------------------------------------------
+    // MODE 2: INTERACTIVE TIMED QUIZ ENGINE
+    // --------------------------------------------------------
+    function startQuiz(lessonId) {
+      const topic = CURRICULUM_DATA.find(t => t.id === lessonId);
+      if (!topic || !topic.quiz) {
+        window.location.href = 'quizzes.html';
+        return;
+      }
+
+      currentQuizState.topic = topic;
+      currentQuizState.timeLeft = topic.quiz.timeLimit;
+      currentQuizState.userAnswers = {};
+
+      const main = document.getElementById('quiz-main-container');
+
+      main.innerHTML = `
+        <div style="margin-bottom: 1.5rem;">
+          <a href="quizzes.html" style="color: var(--text-secondary); font-weight: 600; text-decoration: none;">← Exit Quiz</a>
+        </div>
+
+        <div class="card" style="padding: 2.5rem; max-width: 900px; margin: 0 auto;">
+          
+          <!-- Header Bar -->
+          <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 1.5rem; margin-bottom: 2rem;">
+            <div>
+              <span class="badge badge-info">${topic.code}</span>
+              <h2 style="font-size: 1.8rem; margin-top: 0.4rem;">${topic.title} Checkpoint</h2>
+            </div>
+
+            <!-- Timer Box -->
+            <div style="background: var(--bg-primary); border: 2px solid var(--primary); padding: 0.6rem 1.2rem; border-radius: 12px; font-weight: 800; font-size: 1.2rem; color: var(--primary); display: flex; align-items: center; gap: 0.5rem;">
+              ⏱️ <span id="timer-display">00:00</span>
+            </div>
+          </div>
+
+          <!-- Questions List -->
+          <form id="quiz-form" onsubmit="submitQuiz(event)">
+            <div id="questions-container" style="display: flex; flex-direction: column; gap: 2rem;">
+              ${topic.quiz.questions.map((q, idx) => `
+                <div class="question-card" style="background: var(--bg-primary); padding: 1.8rem; border-radius: 12px; border: 1px solid var(--border-color);" id="q-card-${idx}">
+                  <h4 style="font-size: 1.05rem; margin-bottom: 1rem; color: var(--text-primary);" id="q-text-${idx}">
+                    Question ${idx + 1} of ${topic.quiz.questions.length}: ${q.question}
+                  </h4>
+
+                  <div style="display: flex; flex-direction: column; gap: 0.8rem;">
+                    ${q.options.map((opt, optIdx) => `
+                      <label style="display: flex; align-items: center; gap: 0.8rem; background: var(--bg-secondary); padding: 0.8rem 1.2rem; border-radius: 8px; border: 1px solid var(--border-color); cursor: pointer; transition: var(--transition);" class="option-label">
+                        <input type="radio" name="question_${idx}" value="${optIdx}" onchange="selectAnswer(${idx}, ${optIdx})" required style="accent-color: var(--primary);">
+                        <span id="q-opt-${idx}-${optIdx}">${opt}</span>
+                      </label>
+                    `).join('')}
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+
+            <div style="margin-top: 2.5rem; text-align: right;">
+              <button type="submit" class="btn btn-primary" style="padding: 0.8rem 2.5rem; font-size: 1.1rem;">
+                Submit Quiz Answers ✓
+              </button>
+            </div>
+          </form>
+
+        </div>
+      `;
+
+      // Render KaTeX math in questions
+      App.renderMath('quiz-main-container');
+
+      // Start countdown timer
+      startTimer();
+    }
+
+    function startTimer() {
+      updateTimerDisplay();
+      currentQuizState.timer = setInterval(() => {
+        currentQuizState.timeLeft--;
+        updateTimerDisplay();
+
+        if (currentQuizState.timeLeft <= 0) {
+          clearInterval(currentQuizState.timer);
+          App.showToast('Time is up! Submitting quiz automatically...', 'warning');
+          document.getElementById('quiz-form').requestSubmit();
+        }
+      }, 1000);
+    }
+
+    function updateTimerDisplay() {
+      const timerEl = document.getElementById('timer-display');
+      if (!timerEl) return;
+      const mins = Math.floor(currentQuizState.timeLeft / 60);
+      const secs = currentQuizState.timeLeft % 60;
+      timerEl.innerText = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    }
+
+    function selectAnswer(qIdx, optIdx) {
+      currentQuizState.userAnswers[qIdx] = optIdx;
+    }
+
+    function submitQuiz(e) {
+      if (e) e.preventDefault();
+      clearInterval(currentQuizState.timer);
+
+      const topic = currentQuizState.topic;
+      const questions = topic.quiz.questions;
+      let score = 0;
+
+      questions.forEach((q, idx) => {
+        const selected = currentQuizState.userAnswers[idx];
+        if (selected !== undefined && selected === q.correct) {
+          score++;
+        }
+      });
+
+      const total = questions.length;
+      const percentage = Math.round((score / total) * 100);
+      const passed = percentage >= topic.quiz.passingScore;
+
+      // Save to Store
+      const resultObj = {
+        quizId: topic.id,
+        lessonId: topic.id,
+        score: `${score}/${total}`,
+        percentage: percentage,
+        passed: passed,
+        date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+      };
+
+      Store.saveQuizResult(resultObj);
+
+      // Render Result Breakdown Screen
+      renderResultScreen(resultObj, questions);
+    }
+
+    function renderResultScreen(result, questions) {
+      const main = document.getElementById('quiz-main-container');
+      const topic = currentQuizState.topic;
+
+      main.innerHTML = `
+        <div style="margin-bottom: 1.5rem;">
+          <a href="quizzes.html" style="color: var(--text-secondary); font-weight: 600; text-decoration: none;">← Back to Quizzes List</a>
+        </div>
+
+        <div class="card" style="padding: 2.5rem; max-width: 850px; margin: 0 auto;">
+          
+          <!-- Summary Banner -->
+          <div style="text-align: center; border-bottom: 1px solid var(--border-color); padding-bottom: 2rem; margin-bottom: 2rem;">
+            <span style="font-size: 3.5rem;">${result.passed ? '🎉' : '⚠️'}</span>
+            <h1 style="font-size: 2.2rem; margin-top: 0.5rem;">${result.passed ? 'Checkpoint Passed!' : 'Requires Review'}</h1>
+            <p style="color: var(--text-secondary);">${topic.title} — ${topic.code}</p>
+
+            <div style="display: flex; gap: 2rem; justify-content: center; margin-top: 1.5rem;">
+              <div>
+                <div style="font-size: 2.2rem; font-weight: 800; color: ${result.passed ? 'var(--success)' : 'var(--danger)'};">${result.percentage}%</div>
+                <p style="font-size: 0.85rem; color: var(--text-secondary);">Score (${result.score})</p>
+              </div>
+              <div style="border-left: 1px solid var(--border-color); padding-left: 2rem;">
+                <div style="font-size: 2.2rem; font-weight: 800; color: var(--primary);">${topic.quiz.passingScore}%</div>
+                <p style="font-size: 0.85rem; color: var(--text-secondary);">Passing Score</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step-by-Step Question Breakdown -->
+          <h3 style="font-size: 1.3rem; margin-bottom: 1.5rem;">Detailed Solution Breakdown</h3>
+
+          <div style="display: flex; flex-direction: column; gap: 1.5rem;" id="results-explanation-list">
+            ${questions.map((q, idx) => {
+              const userOpt = currentQuizState.userAnswers[idx];
+              const isCorrect = userOpt !== undefined && userOpt === q.correct;
+
+              return `
+                <div style="background: var(--bg-primary); padding: 1.5rem; border-radius: 12px; border: 1px solid ${isCorrect ? 'var(--success)' : 'var(--danger)'};">
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem;">
+                    <span style="font-weight: 700; font-size: 0.9rem;">Question ${idx + 1}</span>
+                    <span class="badge ${isCorrect ? 'badge-success' : 'badge-danger'}">
+                      ${isCorrect ? '✓ Correct' : '✗ Incorrect'}
+                    </span>
+                  </div>
+
+                  <p style="font-weight: 600; margin-bottom: 0.8rem;">${q.question}</p>
+
+                  <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 0.4rem;">
+                    <strong>Your Choice:</strong> ${userOpt !== undefined ? q.options[userOpt] : 'None'}
+                  </p>
+                  <p style="font-size: 0.9rem; color: var(--success); margin-bottom: 0.8rem;">
+                    <strong>Correct Answer:</strong> ${q.options[q.correct]}
+                  </p>
+
+                  <div style="background: var(--bg-secondary); padding: 1rem; border-radius: 8px; font-size: 0.85rem; color: var(--text-primary); border-left: 3px solid var(--primary);">
+                    💡 <strong>Explanation:</strong> ${q.explanation}
+                  </div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+
+          <div style="margin-top: 2.5rem; display: flex; gap: 1rem; justify-content: space-between;">
+            <a href="lessons.html?id=${topic.id}" class="btn btn-outline">📖 Re-read Study Sheet</a>
+            <a href="quizzes.html" class="btn btn-primary">Take Next Quiz →</a>
+          </div>
+
+        </div>
+      `;
+
+      // Render KaTeX in explanation breakdown
+      App.renderMath('results-explanation-list');
+    }
+  </script>
+</body>
+</html>

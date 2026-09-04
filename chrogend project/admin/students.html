@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Records — Admin MathVibe</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/data.js"></script>
+  <script src="../js/store.js"></script>
+  <script src="../js/app.js"></script>
+</head>
+<body class="dark-mode">
+
+  <div id="app-header"></div>
+
+  <div class="dashboard-wrapper">
+    <div id="app-sidebar"></div>
+
+    <main class="main-content">
+      <div class="page-header" style="margin-bottom: 2rem;">
+        <div>
+          <h1 style="font-size: 2.2rem;">Registered Student Records</h1>
+          <p style="color: var(--text-secondary);">Monitor registered student performance and quiz attempt activity.</p>
+        </div>
+      </div>
+
+      <div class="card" style="padding: 2rem;">
+        <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem;">
+          <thead>
+            <tr style="border-bottom: 1px solid var(--border-color); text-align: left;">
+              <th style="padding: 0.8rem; color: var(--text-secondary);">Student Name</th>
+              <th style="padding: 0.8rem; color: var(--text-secondary);">Student ID</th>
+              <th style="padding: 0.8rem; color: var(--text-secondary);">Email</th>
+              <th style="padding: 0.8rem; color: var(--text-secondary);">Department</th>
+              <th style="padding: 0.8rem; color: var(--text-secondary);">Status</th>
+            </tr>
+          </thead>
+          <tbody id="students-list-body">
+            <!-- Dynamically rendered -->
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+
+  <div id="app-footer"></div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const currentUser = Store.getUser();
+      const tbody = document.getElementById('students-list-body');
+
+      const dummyStudents = [
+        { name: currentUser?.name || 'Chrogend', matric: currentUser?.matricNumber || 'STU-2026-001', email: currentUser?.email || 'chrogend@mathvibe.org', dept: 'Mathematics' },
+        { name: 'Amina Bello', matric: 'STU-2026-014', email: 'amina@mathvibe.org', dept: 'Mathematics' },
+        { name: 'Emmanuel Okonkwo', matric: 'STU-2026-045', email: 'emmanuel@mathvibe.org', dept: 'Physics' },
+        { name: 'Fatima Abubakar', matric: 'STU-2026-067', email: 'fatima@mathvibe.org', dept: 'Computer Science' }
+      ];
+
+      tbody.innerHTML = dummyStudents.map(s => `
+        <tr style="border-bottom: 1px solid var(--border-color);">
+          <td style="padding: 0.8rem; font-weight: 600;">${s.name}</td>
+          <td style="padding: 0.8rem;">${s.matric}</td>
+          <td style="padding: 0.8rem;">${s.email}</td>
+          <td style="padding: 0.8rem;">${s.dept}</td>
+          <td style="padding: 0.8rem;"><span class="badge badge-success">Active</span></td>
+        </tr>
+      `).join('');
+    });
+  </script>
+</body>
+</html>

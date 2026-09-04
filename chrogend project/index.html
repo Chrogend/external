@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MathVibe — Online Mathematics Learning & Assessment Portal</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/data.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/app.js"></script>
+</head>
+<body class="dark-mode">
+
+  <div id="app-header"></div>
+
+  <!-- Hero Section with Animated Pictorial Math Visualizer -->
+  <section class="hero" style="padding: 5rem 2rem;">
+    <div style="max-width: 1300px; margin: 0 auto; display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 4rem; align-items: center;">
+      
+      <!-- Left Column: Text & CTA -->
+      <div>
+        <span class="badge badge-info" style="font-size: 0.9rem; padding: 0.5rem 1.4rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 1.5rem; display: inline-block;">
+          🎓 Complete Mathematics Platform
+        </span>
+        <h1 class="executive-heading" style="font-size: 3.5rem; line-height: 1.2; margin-bottom: 1.5rem;">
+          Master 20 Core <span style="color: var(--primary);">Mathematics</span> Topics
+        </h1>
+        <p style="color: var(--text-secondary); font-size: 1.2rem; margin-bottom: 2.5rem; line-height: 1.7; max-width: 620px;">
+          An interactive learning portal featuring 20 core mathematics topics, 10-page structured lecture notes, worked examples, practice problem sets, and timed assessment quizzes.
+        </p>
+
+        <div style="display: flex; gap: 1.2rem; align-items: center; flex-wrap: wrap;">
+          <a href="student/login.html" class="btn btn-primary" style="padding: 1rem 2.2rem; font-size: 1.1rem;">
+            Sign In to Portal →
+          </a>
+          <a href="student/register.html" class="btn btn-outline" style="padding: 1rem 2.2rem; font-size: 1.1rem;">
+            Create Free Account
+          </a>
+          <a href="student/lessons.html" class="btn btn-outline" style="padding: 1rem 1.8rem; font-size: 1.1rem;">
+            Browse 20 Topics
+          </a>
+        </div>
+      </div>
+
+      <!-- Right Column: Pictorial Animated Math Visualizer -->
+      <div class="hero-visual-wrapper">
+        <!-- Orbital Rings -->
+        <div class="hero-orbit-ring ring-1"></div>
+        <div class="hero-orbit-ring ring-2"></div>
+        <div class="hero-orbit-ring ring-3"></div>
+
+        <!-- Center SVG Math Canvas Graphic -->
+        <svg width="280" height="280" viewBox="0 0 200 200" fill="none" style="filter: drop-shadow(0 0 25px rgba(59, 130, 246, 0.4)); animation: float 6s ease-in-out infinite;">
+          <!-- Glowing Coordinate Grid -->
+          <circle cx="100" cy="100" r="90" stroke="rgba(59, 130, 246, 0.2)" stroke-width="1.5" stroke-dasharray="4 4" />
+          <circle cx="100" cy="100" r="60" stroke="rgba(6, 182, 212, 0.25)" stroke-width="1.5" />
+          <line x1="10" y1="100" x2="190" y2="100" stroke="rgba(59, 130, 246, 0.4)" stroke-width="2" />
+          <line x1="100" y1="10" x2="100" y2="190" stroke="rgba(59, 130, 246, 0.4)" stroke-width="2" />
+          
+          <!-- Animated Calculus Sine Wave Curve -->
+          <path d="M 10 100 Q 55 20, 100 100 T 190 100" stroke="url(#sineGrad)" stroke-width="4" fill="none" stroke-linecap="round" />
+
+          <!-- Dynamic Polygon Wireframe -->
+          <polygon points="100,30 160,70 160,130 100,170 40,130 40,70" stroke="rgba(168, 85, 247, 0.5)" stroke-width="2" fill="rgba(168, 85, 247, 0.05)" />
+          
+          <!-- Pulsing Nodes -->
+          <circle cx="100" cy="30" r="5" fill="#3b82f6" />
+          <circle cx="160" cy="70" r="5" fill="#06b6d4" />
+          <circle cx="160" cy="130" r="5" fill="#a855f7" />
+          <circle cx="100" cy="170" r="5" fill="#3b82f6" />
+          <circle cx="40" cy="130" r="5" fill="#10b981" />
+          <circle cx="40" cy="70" r="5" fill="#f59e0b" />
+
+          <!-- Gradient Definitions -->
+          <defs>
+            <linearGradient id="sineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#3b82f6" />
+              <stop offset="50%" stop-color="#06b6d4" />
+              <stop offset="100%" stop-color="#a855f7" />
+            </linearGradient>
+          </defs>
+        </svg>
+
+        <!-- Floating Math Badges -->
+        <div class="hero-math-badge-float badge-float-1">
+          <span>∫ f(x) dx = F(x) + C</span>
+        </div>
+        <div class="hero-math-badge-float badge-float-2">
+          <span>∇ × E = -∂B/∂t</span>
+        </div>
+        <div class="hero-math-badge-float badge-float-3">
+          <span>e^{iπ} + 1 = 0</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Platform Stats Bar -->
+  <section style="background: var(--bg-secondary); border-y: 1px solid var(--border-color); padding: 2.5rem 2rem;">
+    <div style="max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; text-align: center;">
+      <div>
+        <h2 style="font-size: 2.5rem; color: var(--primary); font-weight: 800;">20</h2>
+        <p style="color: var(--text-secondary); font-weight: 600; font-size: 0.95rem; margin-top: 0.3rem;">Core Topics</p>
+      </div>
+      <div>
+        <h2 style="font-size: 2.5rem; color: var(--info); font-weight: 800;">200</h2>
+        <p style="color: var(--text-secondary); font-weight: 600; font-size: 0.95rem; margin-top: 0.3rem;">Lecture Pages</p>
+      </div>
+      <div>
+        <h2 style="font-size: 2.5rem; color: var(--success); font-weight: 800;">20</h2>
+        <p style="color: var(--text-secondary); font-weight: 600; font-size: 0.95rem; margin-top: 0.3rem;">Checkpoint Quizzes</p>
+      </div>
+      <div>
+        <h2 style="font-size: 2.5rem; color: var(--warning); font-weight: 800;">100%</h2>
+        <p style="color: var(--text-secondary); font-weight: 600; font-size: 0.95rem; margin-top: 0.3rem;">Interactive & Timed</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="section">
+    <div style="text-align: center; margin-bottom: 3.5rem;">
+      <h2 style="font-size: 2.4rem; margin-bottom: 0.8rem;">Core Platform Features</h2>
+      <p style="color: var(--text-secondary); font-size: 1.1rem; max-width: 600px; margin: 0 auto;">Everything you need to master advanced mathematical concepts step-by-step.</p>
+    </div>
+
+    <div class="features-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 2.2rem;">
+      
+      <div class="feature-card">
+        <div class="feature-icon">📚</div>
+        <h3>20 Core Mathematics Topics</h3>
+        <p>From Mathematical Methods and Real Analysis to Partial Differential Equations and Integral Equations.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">📖</div>
+        <h3>10 Pages Per Lesson</h3>
+        <p>Each topic features 10 structured lecture pages complete with KaTeX math formulas, theorems, and proofs.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">✍️</div>
+        <h3>Worked & Practice Examples</h3>
+        <p>Step-by-step solved examples followed by interactive practice problems with collapsible solution reveals.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">⏱️</div>
+        <h3>Timed Checkpoint Quizzes</h3>
+        <p>Test your understanding with timed quizzes, instant scoring, detailed review cards, and answer explanations.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Topic Curriculum Overview (Pictorial Teaser) -->
+  <section style="background: var(--bg-secondary); padding: 5rem 2rem; border-top: 1px solid var(--border-color);">
+    <div style="max-width: 1100px; margin: 0 auto; text-align: center;">
+      <h2 style="font-size: 2.4rem; margin-bottom: 1rem;">Curriculum Breakdown</h2>
+      <p style="color: var(--text-secondary); font-size: 1.1rem; max-width: 650px; margin: 0 auto 3rem auto;">
+        Our 20 topics are organized into 4 logical course modules. Click below to explore the full lessons catalogue.
+      </p>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.8rem; margin-bottom: 3rem;">
+        
+        <div class="card" style="padding: 2rem; text-align: left; position: relative; overflow: hidden;">
+          <div style="position: absolute; right: 1rem; top: 1rem; font-size: 2.5rem; opacity: 0.2;">📐</div>
+          <span class="badge badge-info" style="margin-bottom: 0.8rem;">Module 1</span>
+          <h3 style="font-size: 1.2rem; margin-bottom: 0.5rem;">Topics 1 – 5</h3>
+          <p style="font-size: 0.9rem; color: var(--text-secondary);">Mathematical Methods, Real Analysis, Abstract Algebra, Linear Algebra, Numerical Analysis.</p>
+        </div>
+
+        <div class="card" style="padding: 2rem; text-align: left; position: relative; overflow: hidden;">
+          <div style="position: absolute; right: 1rem; top: 1rem; font-size: 2.5rem; opacity: 0.2;">📈</div>
+          <span class="badge badge-info" style="margin-bottom: 0.8rem;">Module 2</span>
+          <h3 style="font-size: 1.2rem; margin-bottom: 0.5rem;">Topics 6 – 10</h3>
+          <p style="font-size: 0.9rem; color: var(--text-secondary);">ODEs, Complex Analysis, Vector Analysis, Advanced Real Analysis, Advanced Abstract Algebra.</p>
+        </div>
+
+        <div class="card" style="padding: 2rem; text-align: left; position: relative; overflow: hidden;">
+          <div style="position: absolute; right: 1rem; top: 1rem; font-size: 2.5rem; opacity: 0.2;">🔄</div>
+          <span class="badge badge-info" style="margin-bottom: 0.8rem;">Module 3</span>
+          <h3 style="font-size: 1.2rem; margin-bottom: 0.5rem;">Topics 11 – 15</h3>
+          <p style="font-size: 0.9rem; color: var(--text-secondary);">Complex Analysis II, Mathematical Modelling, Numerical Analysis II, Vector & Tensor Analysis, Functional Analysis.</p>
+        </div>
+
+        <div class="card" style="padding: 2rem; text-align: left; position: relative; overflow: hidden;">
+          <div style="position: absolute; right: 1rem; top: 1rem; font-size: 2.5rem; opacity: 0.2;">♾️</div>
+          <span class="badge badge-info" style="margin-bottom: 0.8rem;">Module 4</span>
+          <h3 style="font-size: 1.2rem; margin-bottom: 0.5rem;">Topics 16 – 20</h3>
+          <p style="font-size: 0.9rem; color: var(--text-secondary);">Optimization Theory, General Topology, Measure Theory, PDEs, Integral Equations.</p>
+        </div>
+
+      </div>
+
+      <a href="student/lessons.html" class="btn btn-primary" style="padding: 1rem 3rem; font-size: 1.1rem;">
+        Explore All 20 Topic Lessons →
+      </a>
+    </div>
+  </section>
+
+  <!-- CTA Banner -->
+  <section class="section" style="text-align: center;">
+    <div class="card" style="padding: 4rem 2rem; max-width: 900px; margin: 0 auto; background: linear-gradient(135deg, var(--primary-glow) 0%, rgba(15, 23, 42, 0.9) 100%);">
+      <h2 style="font-size: 2.4rem; margin-bottom: 1rem;">Start Learning & Assessment Today</h2>
+      <p style="color: var(--text-secondary); font-size: 1.1rem; max-width: 600px; margin: 0 auto 2.5rem auto;">
+        Sign in to your student account or register to start studying 20 core topics and taking checkpoint quizzes.
+      </p>
+      <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+        <a href="student/login.html" class="btn btn-primary" style="padding: 0.9rem 2.2rem; font-size: 1rem;">
+          Sign In Now
+        </a>
+        <a href="student/register.html" class="btn btn-outline" style="padding: 0.9rem 2.2rem; font-size: 1rem;">
+          Create Free Account
+        </a>
+        <a href="about.html" class="btn btn-outline" style="padding: 0.9rem 1.8rem; font-size: 1rem;">
+          About Platform
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <div id="app-footer"></div>
+</body>
+</html>
